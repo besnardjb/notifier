@@ -8,7 +8,7 @@ use chrono::prelude::*;
 async fn query_value(name : &str, server : &str) -> Result<f64, Error>
 {
     let response: prometheus_http_query::response::PromqlResult = query(server, name)?.get().await?;
-    let r = response.data().as_vector().expect("Success").first().unwrap().sample().value();
+    let r = response.data().as_vector().expect("Success").last().unwrap().sample().value();
 
     Ok(r)
 }
