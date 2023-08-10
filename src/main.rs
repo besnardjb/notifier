@@ -2,6 +2,8 @@ use clap::Parser;
 use prometheus_http_query::{Error, query};
 use serde::Serialize;
 use std::error;
+use chrono::prelude::*;
+
 
 async fn query_value(name : &str, server : &str) -> Result<f64, Error>
 {
@@ -46,7 +48,12 @@ async fn main()  -> Result<(), Box<dyn error::Error>>
     let avgsolar_1h = query_value("avg_over_time(imeon_pv_input_power1[1h])", args.prometheus.as_str()).await?.round();
     let avgpower_1h = query_value("avg_over_time(imeon_em_power[1h])", args.prometheus.as_str()).await?.round();
 
-    let mut message : String = "Rapport de status des panneaux solaires. ".to_string();
+    let time: DateTime<Local> = Local::now();
+
+
+    let mut message : String = format!("Ding Dong ! Il est {}:{} ",time.hour(), time.minute());
+
+    message += "Rapport de status des panneaux solaires. ";
 
     if soc == 100.0
     {
