@@ -44,7 +44,7 @@ async fn main()  -> Result<(), Box<dyn error::Error>>
 
     let soc = query_value("imeon_battery_soc", args.prometheus.as_str()).await?.round();
     let avgsolar_1h = query_value("avg_over_time(imeon_pv_input_power1[1h])", args.prometheus.as_str()).await?.round();
-    let avgpower_1h = query_value("avg_over_time(imeon_grid_power_r[1h])", args.prometheus.as_str()).await?.round();
+    let avgpower_1h = query_value("avg_over_time(imeon_em_power[1h])", args.prometheus.as_str()).await?.round();
 
     let mut message : String = "Rapport de status des panneaux solaires. ".to_string();
 
