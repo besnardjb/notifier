@@ -51,7 +51,17 @@ async fn main()  -> Result<(), Box<dyn error::Error>>
     let time: DateTime<Local> = Local::now();
 
 
-    let mut message : String = format!("Ding Dong ! Il est {}:{} ",time.hour(), time.minute());
+
+    let mut message : String;
+
+    if time.minute() == 0
+    {
+        message = format!("Ding Dong ! Il est {} heure",time.hour());
+    }
+    else
+    {
+        message = format!("Ding Dong ! Il est {} heure et {} minutes",time.hour(), time.minute());
+    }
 
     message += "Rapport de status des panneaux solaires. ";
 
