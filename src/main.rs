@@ -596,13 +596,329 @@ fn pick_break() -> &'static str
     return possible[index]
 }
 
+fn pick_goodnight() -> &'static str
+{
+    let possible = [
+        "Bonne soirée ! Que votre nuit soit douce et reposante, remplie de rêves merveilleux.",
+        "Il est temps de se détendre et de profiter d'une belle soirée. Passez une nuit paisible et réparatrice.",
+        "Que votre soirée soit paisible et votre nuit remplie de doux rêves. Bonne nuit et à demain !",
+        "Profitez de chaque moment de votre soirée, puis laissez-vous emporter dans un sommeil profond et réparateur. Bonne nuit !",
+        "Bonne soirée à vous ! Puissiez-vous trouver le calme et la sérénité pendant la nuit qui approche.",
+        "Que la magie de la soirée enveloppe votre cœur de douceur et que votre nuit soit remplie de rêves enchanteurs.",
+        "Il est temps de laisser derrière vous les soucis de la journée. Passez une agréable soirée et une nuit paisible.",
+        "Bonne soirée ! Puissiez-vous vous reposer confortablement et vous réveiller rafraîchi(e) et prêt(e) pour un nouveau jour.",
+        "Que votre soirée soit aussi belle que les étoiles dans le ciel et que votre nuit soit calme et réparatrice.",
+        "Profitez de la tranquillité de la soirée et laissez vos soucis s'apaiser pendant votre sommeil. Bonne nuit !",
+        "Bonne soirée ! Profitez de ce temps pour vous relaxer et vous préparer pour une nuit de repos bien méritée.",
+        "Que votre soirée soit douce comme une mélodie apaisante et que votre nuit soit paisible et reposante.",
+        "Il est temps de fermer les yeux et de laisser la magie de la nuit vous emporter. Bonne soirée et bonne nuit !",
+        "Que votre soirée soit remplie de moments agréables et que votre nuit soit un havre de paix et de tranquillité.",
+        "Bonne soirée ! Puissent vos soucis s'évaporer au coucher du soleil et vos rêves vous emmener vers des mondes enchantés.",
+        "Que votre soirée soit un doux prélude à une nuit de sommeil réparateur. Profitez pleinement de ces moments de repos.",
+        "Il est temps de clore cette journée en beauté. Passez une soirée agréable et une nuit paisible. Bonne nuit !",
+        "Bonne soirée à vous ! Que votre nuit soit un doux voyage au pays des rêves et de la détente.",
+        "Que chaque étoile dans le ciel illumine votre soirée et apporte une lueur de tranquillité à votre nuit.",
+        "Bonne soirée ! Que votre nuit soit remplie de rêves tendres et de repos bien mérité.",
+        "Il est temps de se laisser aller au sommeil et de profiter d'une nuit régénérante. Bonne soirée et bonne nuit !",
+        "Que votre soirée soit belle et que votre nuit soit remplie de quiétude et de repos. Bonne nuit à vous !",
+        "Bonne soirée ! Puissiez-vous trouver le confort et la paix dans la nuit qui s'annonce.",
+        "Profitez de chaque instant de votre soirée et laissez-vous porter par un sommeil apaisant. Bonne nuit !",
+        "Bonne soirée à vous ! Que votre nuit soit enveloppée de douceur et de rêves apaisants.",
+        "Que la soirée vous offre un moment de détente bien mérité et que la nuit vous apporte un repos réparateur.",
+        "Bonne soirée ! Laissez vos préoccupations de côté et préparez-vous pour une nuit de repos bienfaisant.",
+        "Profitez de cette soirée pour vous ressourcer et recharger vos énergies. Passez une nuit sereine et reposante.",
+        "Bonne soirée ! Que votre nuit soit tissée de rêves enchanteurs et de douceur infinie.",
+        "Que la soirée vous apporte le réconfort et la tranquillité dont vous avez besoin. Bonne nuit et à demain !",
+        "Bonne soirée à vous ! Puissiez-vous trouver le calme intérieur nécessaire pour une nuit de sommeil paisible.",
+        "Que votre soirée soit un moment de relaxation et que votre nuit soit un doux voyage vers la quiétude.",
+        "Bonne soirée ! Que vos rêves soient doux et votre sommeil réparateur pour un lendemain radieux.",
+        "Profitez de cette soirée pour vous détendre et vous reposer. Que votre nuit soit paisible et revitalisante.",
+        "Bonne soirée à vous ! Puissent les étoiles veiller sur votre sommeil et vous offrir des rêves magiques.",
+        "Que votre soirée soit baignée de sérénité et que votre nuit soit un refuge de tranquillité. Bonne nuit !"
+    ];
+
+
+    let mut rng = rand::thread_rng();
+    let index = rng.gen_range(0..possible.len());
+    return possible[index]
+}
+
+
+fn pick_motiv_morning() -> &'static str
+{
+    let possible = [
+        "C'est le moment de faire une pause et de vous accorder un moment de réflexion. Prenez une profonde respiration et recentrez-vous.",
+        "Prenez quelques instants pour vous détendre et réfléchir à vos objectifs matinaux. Restez concentré(e) et déterminé(e) pour le reste de la matinée.",
+        "Faites une pause dans vos activités matinales et prenez un moment pour réfléchir à votre journée. Que votre réflexion vous guide vers la productivité et le succès.",
+        "Le milieu de la matinée est un bon moment pour réfléchir à ce que vous avez accompli jusqu'à présent et pour ajuster vos priorités pour le reste de la journée.",
+        "Profitez de cette pause matinale pour faire le point sur vos tâches et vos objectifs. Restez positif(ve) et motivé(e) pour ce qui vient !",
+        "Prenez un instant pour apprécier le progrès que vous avez déjà réalisé ce matin. Utilisez cette réflexion pour booster votre motivation et votre énergie.",
+        "Le milieu de la matinée est l'occasion parfaite pour vous reconnecter avec vos objectifs et renouveler votre engagement envers eux. Continuez à avancer avec détermination.",
+        "Accordez-vous un court moment pour vous rappeler pourquoi vous vous êtes levé(e) ce matin. Utilisez cette réflexion pour guider vos actions pour le reste de la journée.",
+        "C'est le moment de faire une pause café mentale. Profitez de cette occasion pour réfléchir à vos réussites et pour planifier vos prochaines étapes.",
+        "Prenez quelques instants pour respirer profondément et vous féliciter pour vos efforts matinaux. Votre réflexion vous aidera à maintenir un état d'esprit positif.",
+        "Utilisez ce moment de réflexion pour recharger vos énergies et pour vous rappeler que chaque action que vous entreprenez vous rapproche de vos objectifs.",
+        "Profitez de cette pause pour évaluer vos priorités et pour vous assurer que vos activités matinales sont alignées avec vos aspirations à long terme.",
+        "Prenez un instant pour vous remercier pour votre engagement envers vos objectifs. Votre dévouement pave la voie vers le succès que vous méritez.",
+        "Le milieu de la matinée est le moment idéal pour renforcer votre motivation. Rappellez-vous pourquoi vos objectifs sont importants et inspirez-vous pour continuer.",
+        "Faites une pause et imaginez le sentiment de satisfaction que vous ressentirez en accomplissant vos tâches matinales avec excellence. Cela vaut chaque effort !",
+        "Profitez de ce moment pour exprimer de la gratitude envers vous-même pour chaque petit pas en avant que vous avez fait jusqu'à présent. Continuez à grandir !",
+        "Prenez quelques instants pour visualiser votre réussite et pour ressentir la fierté qui accompagne l'atteinte de vos objectifs. Vous êtes sur la bonne voie !",
+        "Le milieu de la matinée est le moment idéal pour rappeler à votre esprit que chaque effort que vous investissez dans vos objectifs vous rapproche du succès.",
+        "Faites une pause et célébrez les petites victoires que vous avez déjà remportées ce matin. Chaque pas compte et vous rapproche de votre destination.",
+        "Utilisez ce moment pour vous encourager et vous rappeler que chaque étape, aussi petite soit-elle, vous propulse dans la direction de vos rêves.",
+        "Prenez un instant pour réaliser que chaque moment que vous consacrez à vos objectifs construit la base solide de votre réussite future. Continuez à bâtir !",
+        "Le milieu de la matinée est un rappel que vos efforts matinaux sont les fondations sur lesquelles vous construisez votre journée fructueuse. Restez concentré(e) !"
+    ];
+
+    let mut rng = rand::thread_rng();
+    let index = rng.gen_range(0..possible.len());
+    return possible[index]
+
+}
+
+
+fn pick_motiv_afternoon() -> &'static str
+{
+    let possible = [
+        "Faites une pause dans vos activités de l'après-midi et prenez un moment pour vous recentrer. Respirez profondément et laissez vos pensées s'apaiser.",
+        "C'est le moment idéal pour une pause de réflexion en milieu d'après-midi. Prenez un moment pour recharger vos énergies et reprendre le reste de la journée avec vigueur.",
+        "Profitez de cette pause pour réfléchir à vos réalisations de l'après-midi et pour planifier vos prochaines étapes. Restez concentré(e) et motivé(e) !",
+        "Le milieu de l'après-midi est un bon moment pour faire le point sur votre progression et pour réajuster vos objectifs si nécessaire. Continuez à avancer avec détermination.",
+        "Prenez quelques instants pour méditer sur vos tâches et vos accomplissements de l'après-midi. Restez positif(ve) et concentré(e) pour le reste de la journée.",
+        "Faites une pause et réfléchissez à la façon dont vous pouvez maximiser votre efficacité pendant le reste de l'après-midi. Restez concentré(e) sur vos objectifs.",
+        "C'est le moment de faire un petit bilan de vos réussites et de vous donner un encouragement pour le reste de l'après-midi. Vous avez déjà accompli beaucoup !",
+        "Prenez un instant pour évaluer votre niveau d'énergie et ajustez votre rythme pour optimiser votre performance pendant le reste de la journée.",
+        "Le milieu de l'après-midi est le moment parfait pour vous donner une dose d'inspiration. Prenez une pause pour lire quelque chose de motivant ou pour visualiser vos réussites.",
+        "Faites une pause et rappelez-vous pourquoi vous avez entrepris les tâches de l'après-midi. Utilisez cette réflexion pour maintenir votre concentration et votre détermination.",
+        "Profitez de cette pause pour faire un pas en arrière et apprécier le chemin que vous avez parcouru aujourd'hui. Vous êtes sur la bonne voie vers vos objectifs.",
+        "C'est le moment de reprendre votre souffle et de réfléchir à vos accomplissements de l'après-midi. Chaque petit pas vous rapproche davantage de votre réussite.",
+        "Prenez quelques instants pour réaliser à quel point vous avez été productif(ve) jusqu'à présent. Continuez sur cette lancée positive pour le reste de la journée.",
+        "Le milieu de l'après-midi est l'occasion de vous rappeler que chaque effort que vous investissez porte ses fruits. Restez engagé(e) et persévérant(e) !",
+        "Faites une pause et réfléchissez à la manière dont vous pouvez optimiser vos prochaines heures. Utilisez cette réflexion pour rester concentré(e) sur vos objectifs.",
+        "Utilisez ce moment pour réaffirmer votre détermination à atteindre vos objectifs. Les défis peuvent surgir, mais vous êtes prêt(e) à les surmonter avec succès.",
+        "C'est le moment idéal pour reconnaître votre travail acharné et pour vous rappeler que chaque effort contribue à votre progression. Continuez à avancer avec confiance.",
+        "Prenez quelques instants pour vous rappeler que chaque moment d'effort compte, peu importe sa taille. Chaque pas en avant vous rapproche de la réussite.",
+        "Le milieu de l'après-midi est le moment propice pour reconnaître votre ténacité et pour apprécier vos réalisations. Continuez à poursuivre vos objectifs avec enthousiasme.",
+        "Faites une pause et réfléchissez à la façon dont vous pouvez maintenir votre élan pour le reste de la journée. Votre engagement vous mène vers le succès.",
+        "Utilisez ce moment pour visualiser vos objectifs déjà accomplis et pour vous encourager à persévérer. Vous avez le pouvoir de réaliser ce que vous désirez.",
+        "C'est le moment de recharger vos énergies pour le dernier tronçon de la journée. Réfléchissez à vos réalisations pour rester motivé(e) jusqu'à la fin.",
+        "Prenez quelques instants pour ressentir la fierté de ce que vous avez accompli jusqu'à présent aujourd'hui. Vous êtes sur la bonne voie vers le succès total.",
+        "Le milieu de l'après-midi est l'occasion de renouveler votre engagement envers vos objectifs. Chaque instant que vous consacrez vous rapproche de vos rêves.",
+        "Faites une pause et rappelez-vous que vous êtes capable de surmonter les défis qui se présentent. Votre persévérance est la clé de votre réussite.",
+        "Utilisez ce moment pour vous encourager et pour maintenir votre détermination. Vous avez déjà accompli beaucoup et le reste de la journée est prometteur.",
+        "C'est le moment idéal pour faire une pause et célébrer vos progrès. Votre persévérance vous a mené(e) à ce point, et il y a encore tellement à réaliser !"
+    ];
+
+    let mut rng = rand::thread_rng();
+    let index = rng.gen_range(0..possible.len());
+    return possible[index]
+}
+
+fn now_weather() -> &'static str
+{
+    let possible = [
+        "Météo actuelle :",
+        "Conditions météorologiques en ce moment :",
+        "Voici le temps actuel :",
+        "Regardez le ciel :",
+        "La météo du moment :",
+        "Présentement à l'extérieur :",
+        "Observations météo actuelles :",
+        "Le temps ici et maintenant :",
+        "Les dernières nouvelles météo :",
+        "Instantané météo :",
+        "Un coup d'œil à la météo actuelle :",
+        "Actualité météo :",
+        "L'état du temps en ce moment :",
+        "Point sur la météo actuelle :",
+        "Instantané climatique :"
+    ];
+
+    let mut rng = rand::thread_rng();
+    let index = rng.gen_range(0..possible.len());
+    return possible[index]
+}
+
+fn strong_wind() -> &'static str
+{
+    let possible = [
+        "Attention, vents forts en cours !",
+        "Préparez-vous à des rafales de vent importantes !",
+        "Vents puissants signalés, tenez-vous prêt(e) !",
+        "Soyez vigilant(e), les vents sont très forts !",
+        "Vigilance accrue : vents forts enregistrés.",
+        "Gare aux bourrasques, vents intenses en action !",
+        "Les vents soufflent fort, restez à l'abri.",
+        "Vents vigoureux en vue, prenez vos précautions !",
+        "Vent violent signalé, soyez prudent(e) !",
+        "Vent puissant enregistré, restez en sécurité !"
+    ];
+
+    let mut rng = rand::thread_rng();
+    let index = rng.gen_range(0..possible.len());
+    return possible[index]
+}
+
+fn cold_temp() -> &'static str
+{
+    let possible = [
+        "Risque de gel, veillez à prendre des précautions.",
+        "Températures basses à prévoir, restez au chaud.",
+        "Attention, risque de gel nocturne !",
+        "Précaution hivernale : restez au chaud.",
+        "Gare au froid ! Habillez-vous chaudement.",
+        "Vigilance météo : risque de gel.",
+        "Températures en chute, préparez-vous.",
+        "Alerte gel : prenez vos précautions.",
+        "Protégez-vous du gel nocturne, restez au chaud.",
+        "Nuit froide en perspective, préparez-vous.",
+        "Températures négatives à l'horizon, couvrez-vous bien !",
+        "Le mercure descend : préparez-vous à affronter le froid.",
+        "Gel annoncé : gardez vos vêtements chauds à portée de main.",
+        "Le froid arrive, restez au chaud et confortable.",
+        "Météo frisquette en vue, restez bien emmitouflé(e).",
+        "Soyez prêt(e) pour des températures glaciales.",
+        "Attention, gel attendu. Sortez bien couvert(e) !",
+        "Froid intense à prévoir, gardez-vous au chaud.",
+        "Des frissons en perspective, préparez-vous à grelotter.",
+        "Nuit glaciale à l'horizon, adoptez des mesures pour vous réchauffer.",
+        "Le froid fait son apparition, prenez soin de vous.",
+        "Les températures chutent : restez confortablement au chaud.",
+        "Risque de gel : pensez à protéger vos tuyaux du froid.",
+        "Gel attendu, pensez à couvrir vos plantes et à vous préparer.",
+        "Froid intense en approche, soyez prêt(e) à affronter les frimas."
+    ];
+
+    let mut rng = rand::thread_rng();
+    let index = rng.gen_range(0..possible.len());
+    return possible[index]
+}
+
+fn high_temp() -> &'static str
+{
+    let possible = [
+        "Attention, températures élevées en cours !",
+        "Préparez-vous à la chaleur intense !",
+        "Températures élevées signalées, restez au frais !",
+        "Soyez vigilant(e), la chaleur est intense !",
+        "Vigilance accrue : températures élevées enregistrées.",
+        "Gare à la canicule, restez hydraté(e).",
+        "Les températures grimpent, trouvez un endroit frais.",
+        "Températures brûlantes en vue, prenez vos précautions !",
+        "Chaleur étouffante signalée, soyez prudent(e) !",
+        "Chaleur intense enregistrée, protégez-vous du soleil !",
+        "Attention, risque de coup de chaleur ! Restez au frais.",
+        "Gardez-vous au frais : températures élevées signalées.",
+        "Chaleur accablante en approche, restez hydraté(e).",
+        "Températures en hausse, prenez soin de vous.",
+        "Alerte chaleur : restez à l'ombre et buvez de l'eau.",
+        "Canicule annoncée : protégez-vous du soleil.",
+        "Des records de chaleur enregistrés, adoptez des mesures de précaution.",
+        "Le thermomètre s'emballe : restez à l'abri de la chaleur.",
+        "Risque de coup de soleil élevé, utilisez de la protection solaire.",
+        "Attention aux insolations : hydratez-vous régulièrement.",
+        "Températures torrides en perspective, trouvez un endroit frais.",
+        "Restez à l'ombre : chaleur extrême annoncée.",
+        "Précaution canicule : adoptez des mesures de refroidissement.",
+        "Chaleur intense attendue, prenez des précautions contre la déshydratation.",
+        "Alerte canicule : protégez-vous et restez à l'abri de la chaleur."
+    ];
+
+    let mut rng = rand::thread_rng();
+    let index = rng.gen_range(0..possible.len());
+    return possible[index]
+}
+
 async fn safe_query(value : & str, server : &str) -> String
 {
     match query_value(value, server).await {
         Ok(e) => e,
-        Err(_)=> "Erreur".to_string()
+        Err(e)=> {
+         println!("{}",e);
+         "".to_string()
+        }
     }
 }
+
+
+async fn weather_message(prometheus_url : &str) -> String
+{
+    // Effectuer les requêtes Prometheus pour obtenir les données météo
+    let temperature_celsius: String = safe_query("last_over_time(temperature_celsius{forecast=\"current\"}[1h])", prometheus_url).await;
+    let temperature_celsius_max: String = safe_query("last_over_time(temperature_celsius_maximum{forecast=\"0d\"}[1h])", prometheus_url).await;
+    let temperature_celsius_min: String = safe_query("last_over_time(temperature_celsius_minimum{forecast=\"0d\"}[1h])", prometheus_url).await;
+    let wind_speed_kmph: String = safe_query("last_over_time(windspeed_kmph{forecast=\"current\"}[1h])", prometheus_url).await;
+    let humidity_percentage: String = safe_query("last_over_time(humidity_percentage{forecast=\"current\"}[1h])", prometheus_url).await;
+
+    if temperature_celsius == ""
+    {
+        // No data
+        return "Echec de la récupération de la météo.".to_string();
+    }
+
+    // Traiter les données pour générer le message météo
+    let mut message = String::new();
+
+    let temperature_value: f32 = temperature_celsius.parse().unwrap_or(0.0);
+    let temperature_value_max: f32 = temperature_celsius_max.parse().unwrap_or(0.0);
+    let temperature_value_min: f32 = temperature_celsius_min.parse().unwrap_or(0.0);
+
+    let wind_speed_value: f32 = wind_speed_kmph.parse().unwrap_or(0.0);
+    let humidity_value: f32 = humidity_percentage.parse().unwrap_or(0.0);
+
+    // Générer le message en fonction des valeurs obtenues
+    message.push_str(now_weather());
+    message.push_str(&format!(" Température actuelle : {:.1}°C, Minimale {:.1}, Maximale {:.1}. ", temperature_value, temperature_value_min, temperature_value_max));
+    message.push_str(&format!("Vitesse du vent : {:.1} km/h, ", wind_speed_value));
+    message.push_str(&format!("Humidité : {:.1}% .", humidity_value));
+
+    // Ajouter des conditions pour les vents forts et les températures faibles/fortes
+    if wind_speed_value > 40.0 {
+        message.push_str(strong_wind());
+    }
+    if temperature_value_min < 5.0 {
+        message.push_str(cold_temp());
+    } else if temperature_value_max > 30.0 {
+        message.push_str(high_temp());
+    }
+
+    // Afficher le message météo
+    message
+}
+
+async fn electricity_message(prometheus_url : &str ) -> String
+{
+    let mut message = String::new();
+
+    let soc = safe_query("imeon_battery_soc", prometheus_url).await;
+    let avgsolar_1h = safe_query("avg_over_time(imeon_pv_input_power1[1h])", prometheus_url).await;
+    let avgpower_1h = safe_query("avg_over_time(imeon_em_power[1h])", prometheus_url).await;
+
+    message += format!("{} : ", pick_report_power()).as_str();
+
+    if soc == "100.0"
+    {
+        message += format!("{}. {}. ", pick_full(), pick_spend_elec()).as_str();
+    }
+
+    message.push_str(&format!("Batterie {soc} % "));
+    message.push_str(&format!("Production moyenne sur la dernière heure {avgsolar_1h} watt heure. "));
+    message.push_str(&format!("Consommation moyenne sur la dernière heure {avgpower_1h} watt heure. "));
+
+    match avgpower_1h.parse::<f32>() {
+        Ok(v) => {
+            if v < 0.0
+            {
+                message += pick_inject();
+            }
+        },
+        Err(_) => {}
+    }
+
+    message
+}
+
 
 
 #[tokio::main]
@@ -610,9 +926,6 @@ async fn main()  -> Result<(), Box<dyn error::Error>>
 {
     let args = Args::parse();
 
-    let soc = safe_query("imeon_battery_soc", args.prometheus.as_str()).await;
-    let avgsolar_1h = safe_query("avg_over_time(imeon_pv_input_power1[1h])", args.prometheus.as_str()).await;
-    let avgpower_1h = safe_query("avg_over_time(imeon_em_power[1h])", args.prometheus.as_str()).await;
 
     let time: DateTime<Local> = Local::now();
 
@@ -629,38 +942,33 @@ async fn main()  -> Result<(), Box<dyn error::Error>>
 
     if time.hour() == 8
     {
-        message += pick_morning_greet()
-    }else if time.hour()  == 12
+        message += pick_morning_greet();
+    } else if time.hour() == 10
+    {
+        message += pick_motiv_morning();
+    }
+    else if time.hour()  == 12
     {
         message += pick_lunch();
-    }else if time.hour() == 16
+    }
+    else if time.hour() == 15 {
+        message += pick_motiv_afternoon();
+    }
+    else if time.hour() == 16
     {
         message += pick_break();
-    }else if time.hour()  == 19
+    }
+    else if time.hour()  == 19
     {
         message += pick_dinner();
     }
-
-    message += format!("{} : ", pick_report_power()).as_str();
-
-    if soc == "100.0"
+    else if time.hour()  == 20
     {
-        message += format!("{}. {}. ", pick_full(), pick_spend_elec()).as_str();
+        message += pick_goodnight();
     }
 
-    message += format!("Batterie {soc} % ").as_str();
-    message += format!("Production moyenne sur la dernière heure {avgsolar_1h} watt heure. ").as_str();
-    message += format!("Consommation moyenne sur la dernière heure {avgpower_1h} watt heure. ").as_str();
-
-    match avgpower_1h.parse::<f32>() {
-        Ok(v) => {
-            if v < 0.0
-            {
-                message += pick_inject();
-            }
-        },
-        Err(_) => {}
-    }
+    message += weather_message(args.prometheus.as_str()).await.as_str();
+    message += electricity_message(args.prometheus.as_str()).await.as_str();
 
     println!("{}", message);
 
