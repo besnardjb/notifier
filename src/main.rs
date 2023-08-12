@@ -2,15 +2,21 @@ use clap::Parser;
 use prometheus_http_query::{Error, query};
 use serde::Serialize;
 use std::error;
-use chrono::prelude::*;
+use chrono::{prelude::*, format::format};
 use rand::Rng;
 
-async fn query_value(name : &str, server : &str) -> Result<f64, Error>
+async fn query_value(name : &str, server : &str) -> Result<String, Error>
 {
     let response: prometheus_http_query::response::PromqlResult = query(server, name)?.get().await?;
-    let r = response.data().as_vector().expect("Success").last().unwrap().sample().value();
-
-    Ok(r)
+    match response.data().as_vector().expect("Success").last()
+    {
+        Some(e) => {
+            return Ok(format!("{}", e.sample().value().round()));
+        },
+        None =>{
+             return Err(Error::EmptySeriesSelector);
+        }
+    }
 }
 #[derive(Parser)]
 struct Args
@@ -590,15 +596,23 @@ fn pick_break() -> &'static str
     return possible[index]
 }
 
+async fn safe_query(value : & str, server : &str) -> String
+{
+    match query_value(value, server).await {
+        Ok(e) => e,
+        Err(_)=> "Erreur".to_string()
+    }
+}
+
 
 #[tokio::main]
 async fn main()  -> Result<(), Box<dyn error::Error>>
 {
     let args = Args::parse();
 
-    let soc = query_value("imeon_battery_soc", args.prometheus.as_str()).await?.round();
-    let avgsolar_1h = query_value("avg_over_time(imeon_pv_input_power1[1h])", args.prometheus.as_str()).await?.round();
-    let avgpower_1h = query_value("avg_over_time(imeon_em_power[1h])", args.prometheus.as_str()).await?.round();
+    let soc = safe_query("imeon_battery_soc", args.prometheus.as_str()).await;
+    let avgsolar_1h = safe_query("avg_over_time(imeon_pv_input_power1[1h])", args.prometheus.as_str()).await;
+    let avgpower_1h = safe_query("avg_over_time(imeon_em_power[1h])", args.prometheus.as_str()).await;
 
     let time: DateTime<Local> = Local::now();
 
@@ -629,7 +643,7 @@ async fn main()  -> Result<(), Box<dyn error::Error>>
 
     message += format!("{} : ", pick_report_power()).as_str();
 
-    if soc == 100.0
+    if soc == "100.0"
     {
         message += format!("{}. {}. ", pick_full(), pick_spend_elec()).as_str();
     }
@@ -638,13 +652,19 @@ async fn main()  -> Result<(), Box<dyn error::Error>>
     message += format!("Production moyenne sur la dernière heure {avgsolar_1h} watt heure. ").as_str();
     message += format!("Consommation moyenne sur la dernière heure {avgpower_1h} watt heure. ").as_str();
 
-    if avgpower_1h < 0.0 {
-        message += pick_inject();
+    match avgpower_1h.parse::<f32>() {
+        Ok(v) => {
+            if v < 0.0
+            {
+                message += pick_inject();
+            }
+        },
+        Err(_) => {}
     }
 
-    senf_notify(&args.notifyd, &message).await?;
-
     println!("{}", message);
+
+    senf_notify(&args.notifyd, &message).await?;
 
     Ok(())
 }
