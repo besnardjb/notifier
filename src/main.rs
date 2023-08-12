@@ -547,6 +547,50 @@ fn pick_inject() -> &'static str {
     return possible[index]
 }
 
+fn pick_break() -> &'static str
+{
+    let possible = [
+        "C'est l'heure de faire une pause gourmande ! Profitez de votre goûter pour recharger vos batteries.",
+        "Prenez une pause bien méritée et savourez votre goûter. Un petit plaisir pour vous redonner de l'énergie.",
+        "Quoi de mieux qu'un délicieux goûter pour se remonter le moral ? Prenez une pause et régalez-vous !",
+        "Que ce goûter vous apporte une douceur bienvenue dans votre journée. Prenez le temps de vous détendre et de savourer.",
+        "Un petit creux ? L'heure du goûter est arrivée. Dégustez quelque chose de délicieux et profitez-en !",
+        "Offrez-vous une pause sucrée et délicieuse avec un goûter qui fait plaisir aux papilles.",
+        "Prenez une pause et comblez votre faim avec un goûter délicieux. Votre journée en sera d'autant plus agréable.",
+        "C'est l'instant parfait pour une pause gourmande. Laissez-vous tenter par un délicieux goûter et appréciez chaque bouchée.",
+        "Le goûter est le moment idéal pour recharger vos batteries et vous préparer pour la suite de la journée. Profitez-en !",
+        "Faites une pause et accordez-vous un moment de plaisir avec un goûter savoureux. Vous l'avez bien mérité !",
+        "N'oubliez pas de vous octroyer une pause pour reprendre des forces avec un délicieux goûter. Bon appétit !",
+        "Le goûter, c'est l'occasion de faire une pause et de prendre soin de vous en dégustant quelque chose de délicieux.",
+        "Profitez de ce moment de détente pour savourer un goûter qui éveille vos papilles et vous fait sourire.",
+        "C'est l'heure de ravir vos sens avec un goûter délectable. Prenez une pause et profitez de chaque instant.",
+        "Laissez-vous tenter par un goûter délicieux et faites une pause bien méritée. Votre journée n'en sera que plus agréable !",
+        "Un petit en-cas pour vous redonner de l'énergie et vous faire plaisir. Prenez le temps de déguster votre goûter.",
+        "N'oubliez pas de vous accorder une pause gourmande pour vous régaler avec un goûter savoureux. Bon appétit !",
+        "Que ce goûter soit un moment de douceur et de réconfort dans votre journée. Prenez le temps de vous détendre.",
+        "Savourez chaque bouchée de votre goûter et profitez de cette parenthèse gourmande pour vous ressourcer.",
+        "Prenez une pause et savourez votre goûter avec délectation. Un petit plaisir qui illumine votre journée !",
+        "Le goûter est le moment idéal pour prendre une pause, vous détendre et déguster quelque chose de délicieux.",
+        "Faites une pause et offrez-vous un moment de plaisir avec un goûter qui mettra un sourire sur votre visage.",
+        "Le goûter, c'est la pause rêvée pour combler votre faim et vous offrir une touche de bonheur sucré.",
+        "Profitez de ce moment pour vous faire plaisir avec un goûter savoureux. Vous le méritez bien !",
+        "N'oubliez pas de vous offrir une pause gourmande pour savourer un délicieux goûter. Bon appétit !",
+        "Que votre goûter soit un instant de réconfort et de plaisir. Prenez le temps de déguster chaque bouchée.",
+        "Un goûter délicieux pour vous redonner de l'énergie et ajouter une touche de douceur à votre journée.",
+        "Prenez une pause et savourez chaque instant de votre goûter. C'est un petit plaisir qui fait toute la différence.",
+        "Le goûter, c'est le moment de se faire plaisir avec une petite gourmandise. Profitez-en pour vous détendre.",
+        "Faites une pause et régalez-vous avec un goûter délicieux. Vous avez bien travaillé, vous le méritez !",
+        "Le goûter, c'est le moment de prendre une pause, de savourer et de vous chouchouter. Bon appétit !",
+        "Profitez de ce moment pour faire une pause et apprécier votre goûter. Un petit plaisir qui égaye votre journée.",
+        "N'oubliez pas de vous accorder un instant de répit avec un goûter savoureux. C'est le moment de vous faire plaisir !"
+    ];
+
+    let mut rng = rand::thread_rng();
+    let index = rng.gen_range(0..possible.len());
+    return possible[index]
+}
+
+
 #[tokio::main]
 async fn main()  -> Result<(), Box<dyn error::Error>>
 {
@@ -575,6 +619,9 @@ async fn main()  -> Result<(), Box<dyn error::Error>>
     }else if time.hour()  == 12
     {
         message += pick_lunch();
+    }else if time.hour() == 16
+    {
+        message += pick_break();
     }else if time.hour()  == 19
     {
         message += pick_dinner();
