@@ -642,7 +642,7 @@ async fn main()  -> Result<(), Box<dyn error::Error>>
         message += pick_inject();
     }
 
-    //senf_notify(&args.notifyd, &message).await?;
+    senf_notify(&args.notifyd, &message).await?;
 
     println!("{}", message);
 
