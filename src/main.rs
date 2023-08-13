@@ -869,9 +869,9 @@ async fn weather_message(prometheus_url : &str) -> String
 
     // Générer le message en fonction des valeurs obtenues
     message.push_str(now_weather());
-    message.push_str(&format!(" Température actuelle : {:.1}°C, Minimale {:.1}, Maximale {:.1}. ", temperature_value, temperature_value_min, temperature_value_max));
-    message.push_str(&format!("Vitesse du vent : {:.1} km/h, ", wind_speed_value));
-    message.push_str(&format!("Humidité : {:.1}% .", humidity_value));
+    message.push_str(&format!(" Température actuelle : {} degrés, Minimale {}, Maximale {}. ", temperature_value, temperature_value_min, temperature_value_max));
+    message.push_str(&format!("Vitesse du vent : {} km par heure, ", wind_speed_value));
+    message.push_str(&format!("Humidité : {}%. ", humidity_value));
 
     // Ajouter des conditions pour les vents forts et les températures faibles/fortes
     if wind_speed_value > 40.0 {
@@ -966,6 +966,8 @@ async fn main()  -> Result<(), Box<dyn error::Error>>
     {
         message += pick_goodnight();
     }
+
+    message += " ";
 
     message += weather_message(args.prometheus.as_str()).await.as_str();
     message += electricity_message(args.prometheus.as_str()).await.as_str();
