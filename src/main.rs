@@ -77,7 +77,7 @@ fn pick_greetings() -> &'static str {
         "Haut les cœurs !",
         "Hello tout le monde",
         "Salut, mes chers",
-        "Hey, enchanté(e) de vous voir",
+        "Hey, enchanté de vous voir",
         "Bonjour à la troupe",
         "Salut, les ami(e)s proches et lointains",
         "Coucou, mes amis",
@@ -830,6 +830,36 @@ fn high_temp() -> &'static str
     return possible[index]
 }
 
+fn pick_notif_day() -> &'static str
+{
+    let possible : [&str; 16] = [
+        "C'est aujourd'hui, le",
+        "En ce jour, le",
+        "Nous sommes le",
+        "Le jour est venu :",
+        "À cette date, le",
+        "Voilà que nous sommes le",
+        "Le moment est venu :",
+        "En ce jour béni,",
+        "La date du jour est",
+        "Voici que nous sommes arrivés au",
+        "En cette belle journée du",
+        "Le soleil brille en ce",
+        "Dans le calendrier, c'est",
+        "Le temps est venu de célébrer",
+        "En ce jour mémorable,",
+        "Le début d'une nouvelle période :"
+    ];
+
+    let mut rng = rand::thread_rng();
+    let index = rng.gen_range(0..possible.len());
+    return possible[index]
+}
+
+
+
+
+
 async fn safe_query(value : & str, server : &str) -> String
 {
     match query_value(value, server).await {
@@ -841,15 +871,84 @@ async fn safe_query(value : & str, server : &str) -> String
     }
 }
 
+struct WeatherCode {
+    code: u32,
+    description: &'static str,
+}
+
+fn get_weather_code(code : u32) -> &'static str {
+    let weather_codes = [
+        WeatherCode { code: 113, description: "Le temps est dégagé et ensoleillé" },
+        WeatherCode { code: 116, description: "Le temps est partiellement nuageux" },
+        WeatherCode { code: 119, description: "Le ciel est nuageux" },
+        WeatherCode { code: 122, description: "Le ciel est couvert" },
+        WeatherCode { code: 143, description: "Il y a de la brume" },
+        WeatherCode { code: 176, description: "Des pluies éparses sont à proximité" },
+        WeatherCode { code: 179, description: "Il y a des chutes de neige éparses à proximité" },
+        WeatherCode { code: 182, description: "Il y a du verglas épars à proximité" },
+        WeatherCode { code: 185, description: "Il y a de la bruine verglaçante épars à proximité" },
+        WeatherCode { code: 200, description: "Des orages sont épars à proximité" },
+        WeatherCode { code: 227, description: "Des chasse-neige sont en action" },
+        WeatherCode { code: 230, description: "Un blizzard est en cours" },
+        WeatherCode { code: 248, description: "Il y a du brouillard" },
+        WeatherCode { code: 260, description: "Il y a du brouillard givrant" },
+        WeatherCode { code: 263, description: "Il y a des averses de bruine légère" },
+        WeatherCode { code: 266, description: "Il y a de la bruine légère" },
+        WeatherCode { code: 281, description: "Il y a de la bruine verglaçante légère" },
+        WeatherCode { code: 284, description: "Il y a de la bruine verglaçante forte" },
+        WeatherCode { code: 293, description: "Il y a des averses de pluie légère" },
+        WeatherCode { code: 296, description: "Il y a de la pluie légère" },
+        WeatherCode { code: 299, description: "Par moments, il y a une pluie modérée" },
+        WeatherCode { code: 302, description: "Il y a de la pluie modérée" },
+        WeatherCode { code: 305, description: "Par moments, il y a une pluie forte" },
+        WeatherCode { code: 308, description: "Il y a de fortes pluies" },
+        WeatherCode { code: 311, description: "Il y a de la pluie verglaçante légère" },
+        WeatherCode { code: 314, description: "Il y a de la pluie verglaçante modérée ou forte" },
+        WeatherCode { code: 317, description: "Il y a de la neige légère" },
+        WeatherCode { code: 320, description: "Il y a de la neige modérée ou forte" },
+        WeatherCode { code: 323, description: "Il y a des averses de neige légère éparses" },
+        WeatherCode { code: 326, description: "Il y a de la neige légère" },
+        WeatherCode { code: 329, description: "Il y a des averses de neige modérée éparses" },
+        WeatherCode { code: 332, description: "Il y a de la neige modérée" },
+        WeatherCode { code: 335, description: "Il y a des averses de neige forte éparses" },
+        WeatherCode { code: 338, description: "Il y a de fortes chutes de neige" },
+        WeatherCode { code: 350, description: "Il y a des grêlons" },
+        WeatherCode { code: 353, description: "Il y a des averses de pluie légère" },
+        WeatherCode { code: 356, description: "Il y a des averses de pluie modérée ou forte" },
+        WeatherCode { code: 359, description: "Il y a des averses de pluie torrentielles" },
+        WeatherCode { code: 362, description: "Il y a des averses de grésil légères" },
+        WeatherCode { code: 365, description: "Il y a des averses de grésil modéré ou fort" },
+        WeatherCode { code: 368, description: "Il y a des averses de neige légères" },
+        WeatherCode { code: 371, description: "Il y a des averses de neige modérées ou fortes" },
+        WeatherCode { code: 374, description: "Il y a des averses légères de grêlons" },
+        WeatherCode { code: 377, description: "Il y a des averses modérées ou fortes de grêlons" },
+        WeatherCode { code: 386, description: "Il y a de la pluie légère dans la région avec des éclairs" },
+        WeatherCode { code: 389, description: "Il y a de la pluie modérée ou forte dans la région avec des éclairs" },
+        WeatherCode { code: 392, description: "Il y a de la neige légère dans la région avec des éclairs" },
+        WeatherCode { code: 395, description: "Il y a de la neige modérée ou forte dans la région avec des éclairs" },
+    ];
+
+    for weather_code in weather_codes.iter() {
+        if code == weather_code.code
+        {
+            return weather_code.description;
+        }
+    }
+    "Code météo inconnu"
+}
+
+
 
 async fn weather_message(prometheus_url : &str) -> String
 {
-    // Effectuer les requêtes Prometheus pour obtenir les données météo
     let temperature_celsius: String = safe_query("last_over_time(temperature_celsius{forecast=\"current\"}[1h])", prometheus_url).await;
     let temperature_celsius_max: String = safe_query("last_over_time(temperature_celsius_maximum{forecast=\"0d\"}[1h])", prometheus_url).await;
     let temperature_celsius_min: String = safe_query("last_over_time(temperature_celsius_minimum{forecast=\"0d\"}[1h])", prometheus_url).await;
     let wind_speed_kmph: String = safe_query("last_over_time(windspeed_kmph{forecast=\"current\"}[1h])", prometheus_url).await;
     let humidity_percentage: String = safe_query("last_over_time(humidity_percentage{forecast=\"current\"}[1h])", prometheus_url).await;
+    let cloudover_percentage: String = safe_query("last_over_time(cloudcover_percentage{forecast=\"current\"}[1h])", prometheus_url).await;
+    let weather_code: String = safe_query("last_over_time(weather_code{forecast=\"current\"}[1h])", prometheus_url).await;
+
 
     if temperature_celsius == ""
     {
@@ -866,24 +965,32 @@ async fn weather_message(prometheus_url : &str) -> String
 
     let wind_speed_value: f32 = wind_speed_kmph.parse().unwrap_or(0.0);
     let humidity_value: f32 = humidity_percentage.parse().unwrap_or(0.0);
+    let weather_code_value: u32 = weather_code.parse().unwrap_or(0);
+    let cloudover_percentage_value: u32 = cloudover_percentage.parse().unwrap_or(0);
+
 
     // Générer le message en fonction des valeurs obtenues
     message.push_str(now_weather());
+    message.push_str(&format!(" {}.", get_weather_code(weather_code_value)));
+
+    if cloudover_percentage_value > 0
+    {
+        message.push_str(&format!(" Couverture nuageuse {}%.", cloudover_percentage));
+    }
+
     message.push_str(&format!(" Température actuelle : {} degrés, Minimale {}, Maximale {}. ", temperature_value, temperature_value_min, temperature_value_max));
     message.push_str(&format!("Vitesse du vent : {} km par heure, ", wind_speed_value));
     message.push_str(&format!("Humidité : {}%. ", humidity_value));
 
-    // Ajouter des conditions pour les vents forts et les températures faibles/fortes
     if wind_speed_value > 40.0 {
         message.push_str(strong_wind());
     }
     if temperature_value_min < 5.0 {
         message.push_str(cold_temp());
-    } else if temperature_value_max > 30.0 {
+    } else if temperature_value_max > 27.0 {
         message.push_str(high_temp());
     }
 
-    // Afficher le message météo
     message
 }
 
@@ -895,7 +1002,7 @@ async fn electricity_message(prometheus_url : &str ) -> String
     let avgsolar_1h = safe_query("avg_over_time(imeon_pv_input_power1[1h])", prometheus_url).await;
     let avgpower_1h = safe_query("avg_over_time(imeon_em_power[1h])", prometheus_url).await;
 
-    message += format!("{} : ", pick_report_power()).as_str();
+    message += format!(" {} : ", pick_report_power()).as_str();
 
     if soc == "100.0"
     {
@@ -920,25 +1027,67 @@ async fn electricity_message(prometheus_url : &str ) -> String
 }
 
 
+fn to_fr_day(day : Weekday) -> &'static str
+{
+    match day
+    {
+        Weekday::Mon => "Lundi",
+        Weekday::Tue => "Mardi",
+        Weekday::Wed => "Mercredi",
+        Weekday::Thu => "Jeudi",
+        Weekday::Fri => "Vendredi",
+        Weekday::Sat => "Samedi",
+        Weekday::Sun => "Dimanche",
+    }
+}
+
+fn to_fr_month(m : u32) -> &'static str
+{
+    match m as i32 {
+        1 => "Janvier",
+        2 => "Février",
+        3 => "Mars",
+        4 => "Avril",
+        5 => "Mai",
+        6 => "Juin",
+        7 => "Juillet",
+        8 => "Août",
+        9 => "Septembre",
+        10 => "Octobre",
+        11 => "Novembre",
+        12 => "Décembre",
+        _ => "Erreur"
+    }
+}
+
 
 #[tokio::main]
 async fn main()  -> Result<(), Box<dyn error::Error>>
 {
     let args = Args::parse();
 
-
     let time: DateTime<Local> = Local::now();
 
-    let mut message : String;
+    let mut message : String = "".to_string();
+
+    let dayow = to_fr_day(time.weekday());
+    let day = time.day();
+    let month = to_fr_month(time.month());
+
+    message.push_str(&format!("{} !", pick_greetings()));
+
+
+    message.push_str(&format!(" {} {dayow} {day} {month}. ", pick_notif_day()));
 
     if time.minute() == 0
     {
-        message = format!("{} ! Il est {} heure. ", pick_greetings(), time.hour());
+        message.push_str(&format!(" Il est {} heure. ", time.hour()));
     }
     else
     {
-        message = format!("{} ! Il est {} heure et {} minutes. ", pick_greetings(), time.hour(), time.minute());
+        message.push_str(&format!(" Il est {} heure et {} minutes. ", time.hour(), time.minute()));
     }
+
 
     if time.hour() == 8
     {
