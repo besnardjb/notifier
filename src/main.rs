@@ -941,19 +941,19 @@ fn get_weather_code(code : u32) -> &'static str {
 
 async fn weather_message(prometheus_url : &str) -> String
 {
-    let temperature_celsius: String = safe_query("last_over_time(temperature_celsius{forecast=\"current\"}[1h])", prometheus_url).await;
-    let temperature_celsius_max: String = safe_query("last_over_time(temperature_celsius_maximum{forecast=\"0d\"}[1h])", prometheus_url).await;
-    let temperature_celsius_min: String = safe_query("last_over_time(temperature_celsius_minimum{forecast=\"0d\"}[1h])", prometheus_url).await;
+    let temperature_celsius: String = safe_query("last_over_time(temperature_celsius{forecast=\"current\"}[2h])", prometheus_url).await;
+    let temperature_celsius_max: String = safe_query("last_over_time(temperature_celsius_maximum{forecast=\"0d\"}[2h])", prometheus_url).await;
+    let temperature_celsius_min: String = safe_query("last_over_time(temperature_celsius_minimum{forecast=\"0d\"}[2h])", prometheus_url).await;
     let wind_speed_kmph: String = safe_query("last_over_time(windspeed_kmph{forecast=\"current\"}[1h])", prometheus_url).await;
-    let humidity_percentage: String = safe_query("last_over_time(humidity_percentage{forecast=\"current\"}[1h])", prometheus_url).await;
-    let cloudover_percentage: String = safe_query("last_over_time(cloudcover_percentage{forecast=\"current\"}[1h])", prometheus_url).await;
-    let weather_code: String = safe_query("last_over_time(weather_code{forecast=\"current\"}[1h])", prometheus_url).await;
+    let humidity_percentage: String = safe_query("last_over_time(humidity_percentage{forecast=\"current\"}[2h])", prometheus_url).await;
+    let cloudover_percentage: String = safe_query("last_over_time(cloudcover_percentage{forecast=\"current\"}[2h])", prometheus_url).await;
+    let weather_code: String = safe_query("last_over_time(weather_code{forecast=\"current\"}[2h])", prometheus_url).await;
 
 
     if temperature_celsius == ""
     {
         // No data
-        return "Echec de la récupération de la météo.".to_string();
+        return "".to_string();
     }
 
     // Traiter les données pour générer le message météo
