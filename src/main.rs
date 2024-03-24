@@ -1,5 +1,6 @@
 use chrono::{format::format, prelude::*};
 use clap::Parser;
+use ollama_rs::{generation::completion::request::GenerationRequest, Ollama};
 use prometheus_http_query::{query, Error};
 use rand::Rng;
 use serde::Serialize;
@@ -19,10 +20,14 @@ async fn query_value(name: &str, server: &str) -> Result<String, Error> {
 }
 #[derive(Parser)]
 struct Args {
-    ///Prometheus Server
+    /// Prometheus Server
     prometheus: String,
-    // NotifyD Server
+    /// NotifyD Server
     notifyd: String,
+    /// Ollama server
+    ollama: String,
+    /// Ollama model
+    model: String,
 }
 
 async fn senf_notify(notif_server: &str, text: &str) -> Result<(), reqwest::Error> {
@@ -1355,13 +1360,10 @@ async fn electricity_message(prometheus_url: &str) -> String {
         "Consommation moyenne sur la dernière heure {avgpower_1h} watt heure. "
     ));
 
-    match avgpower_1h.parse::<f32>() {
-        Ok(v) => {
-            if v < 0.0 {
-                message += pick_inject();
-            }
+    if let Ok(v) = avgpower_1h.parse::<f32>() {
+        if v < 0.0 {
+            message += pick_inject();
         }
-        Err(_) => {}
     }
 
     message
@@ -1443,6 +1445,23 @@ async fn main() -> Result<(), Box<dyn error::Error>> {
 
     message += weather_message(args.prometheus.as_str()).await.as_str();
     message += electricity_message(args.prometheus.as_str()).await.as_str();
+
+    let ollama = Ollama::new(args.ollama, 443);
+
+    let res = ollama
+        .generate(GenerationRequest::new(
+            args.model.to_string(),
+            message.to_string(),
+        ))
+        .await;
+
+    match res {
+        Ok(res) => {
+            println!("Did run Ollama model {} on the message", args.model);
+            message = res.response;
+        }
+        Err(e) => println!("Error : {}", e),
+    }
 
     println!("{}", message);
 
