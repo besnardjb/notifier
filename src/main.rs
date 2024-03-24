@@ -1,34 +1,31 @@
+use chrono::{format::format, prelude::*};
 use clap::Parser;
-use prometheus_http_query::{Error, query};
+use prometheus_http_query::{query, Error};
+use rand::Rng;
 use serde::Serialize;
 use std::error;
-use chrono::{prelude::*, format::format};
-use rand::Rng;
 
-async fn query_value(name : &str, server : &str) -> Result<String, Error>
-{
-    let response: prometheus_http_query::response::PromqlResult = query(server, name)?.get().await?;
-    match response.data().as_vector().expect("Success").last()
-    {
+async fn query_value(name: &str, server: &str) -> Result<String, Error> {
+    let response: prometheus_http_query::response::PromqlResult =
+        query(server, name)?.get().await?;
+    match response.data().as_vector().expect("Success").last() {
         Some(e) => {
             return Ok(format!("{}", e.sample().value().round()));
-        },
-        None =>{
-             return Err(Error::EmptySeriesSelector);
+        }
+        None => {
+            return Err(Error::EmptySeriesSelector);
         }
     }
 }
 #[derive(Parser)]
-struct Args
-{
+struct Args {
     ///Prometheus Server
-    prometheus : String,
+    prometheus: String,
     // NotifyD Server
-    notifyd : String
+    notifyd: String,
 }
 
-async fn senf_notify(notif_server: &str, text : &str) -> Result<(), reqwest::Error>
-{
+async fn senf_notify(notif_server: &str, text: &str) -> Result<(), reqwest::Error> {
     let notif_url = format!("{}/notify", notif_server);
     #[derive(Serialize, Debug)]
     struct NotifyQuery {
@@ -37,9 +34,13 @@ async fn senf_notify(notif_server: &str, text : &str) -> Result<(), reqwest::Err
 
     let client = reqwest::Client::new();
 
-    client.post(notif_url).json(&NotifyQuery{
-        text : String::from(text)
-    }).send().await?;
+    client
+        .post(notif_url)
+        .json(&NotifyQuery {
+            text: String::from(text),
+        })
+        .send()
+        .await?;
 
     Ok(())
 }
@@ -111,11 +112,56 @@ fn pick_greetings() -> &'static str {
         "Hello, explorateurs curieux du quotidien",
         "Salut, artistes de la vie en mouvement",
         "Hé, voyageurs temporels de ce moment précis",
-        "Salutations, chers artisans du bonheur"
+        "Salutations, chers artisans du bonheur",
+        "Hello, cher navigateur sur les routes virtuelles",
+        "Bonjour, êtres créatifs et innovants",
+        "Salut, amis de l'aventure mentale",
+        "Hé là-bas, explorateurs du savoir",
+        "Salutations, chers penseurs engagés",
+        "Hello, chercheurs insatiables de la vérité",
+        "Bonjour, êtres d'inspiration et d'imagination",
+        "Salut, amis des émotions profondes",
+        "Hé vous, créateurs de réalités alternatives",
+        "Salutations, chercheurs passionnés du sens de la vie",
+        "Hello, êtres généreux et partageurs",
+        "Bonjour, compagnons de voyage dans l'univers mental",
+        "Salut, amis de la pensée créatrice",
+        "Hé là-bas, célébrateurs de la diversité",
+        "Salutations, chercheurs éclairés du bien-être",
+        "Hello, êtres sensibles et empathiques",
+        "Bonjour, compagnons d'esprit dans l'univers numérique",
+        "Salut, amis des expériences transcendantales",
+        "Hé vous, créateurs de mondes virtuels incroyables",
+        "Salutations, chercheurs engagés vers une meilleure humanité",
+        "Hello, êtres passionnés d'évolution personnelle",
+        "Bonjour, compagnons de voyage dans l'univers des idées",
+        "Salut, amis des expériences spirituelles",
+        "Hé là-bas, célébrateurs de la créativité et de l'innovation",
+        "Salutations, chercheurs du sens de leur existence",
+        "Bonjour, êtres passionnés de la découverte",
+        "Salut, amis des expériences émotionnelles puissantes",
+        "Hé vous, créateurs de mondes inédits et originaux",
+        "Salutations, chercheurs engagés vers une meilleure compréhension du monde",
+        "Hello, êtres curieux et insatiables d'apprentissage",
+        "Bonjour, compagnons de voyage dans l'univers des possibles",
+        "Salut, amis des expériences artistiques",
+        "Hé là-bas, célébrateurs de la diversité culturelle",
+        "Salutations, chercheurs du bonheur et du bien-être",
+        "Hello, êtres passionnés de l'amour et de la compassion",
+        "Bonjour, compagnons d'esprit dans l'univers des émotions",
+        "Salut, amis des expériences spirituelles et métaphysiques",
+        "Hé vous, créateurs de mondes virtuels inédits et innovants",
+        "Salutations, chercheurs engagés vers une meilleure harmonie avec la nature",
+        "Hello, êtres conscients et éclairés de leur impact sur le monde",
+        "Bonjour, compagnons de voyage dans l'univers des possibles infinis",
+        "Salut, amis des expériences d'épanouissement personnel",
+        "Hé là-bas, célébrateurs de la liberté et de l'indépendance",
+        "Salutations, chercheurs passionnés de la vérité absolue",
     ];
 
     let mut rng = rand::thread_rng();
-    let index = rng.gen_range(0..possible.len());    return possible[index]
+    let index = rng.gen_range(0..possible.len());
+    possible[index]
 }
 
 fn pick_report_power() -> &'static str {
@@ -160,10 +206,11 @@ fn pick_report_power() -> &'static str {
         "État des ressources énergétiques",
         "Aperçu de nos générateurs électriques",
         "Données actuelles sur la production électrique",
-        "Bilan énergétique à l'instant T"
+        "Bilan énergétique à l'instant T",
     ];
     let mut rng = rand::thread_rng();
-    let index = rng.gen_range(0..possible.len());    return possible[index]
+    let index = rng.gen_range(0..possible.len());
+    return possible[index];
 }
 
 fn pick_full() -> &'static str {
@@ -187,16 +234,15 @@ fn pick_full() -> &'static str {
         "Batterie opérationnelle à 100% !",
         "La saturation énergétique est là : Batterie est pleine !",
         "Chargement achevé : Batterie à pleine capacité !",
-        "Stockage énergétique complet : Batterie est full !"
+        "Stockage énergétique complet : Batterie est full !",
     ];
 
     let mut rng = rand::thread_rng();
     let index = rng.gen_range(0..possible.len());
-    return possible[index]
+    return possible[index];
 }
 
-fn pick_morning_greet() -> &'static str
-{
+fn pick_morning_greet() -> &'static str {
     let possible = [
         "Bonjour ! Que cette nouvelle journée soit remplie de possibilités et de moments merveilleux. Passez une journée lumineuse et positive !",
         "Bonjour à vous ! Que cette journée soit le début d'une aventure passionnante et pleine de succès.",
@@ -240,7 +286,7 @@ fn pick_morning_greet() -> &'static str
 
     let mut rng = rand::thread_rng();
     let index = rng.gen_range(0..possible.len());
-    return possible[index]
+    return possible[index];
 }
 
 fn pick_spend_elec() -> &'static str {
@@ -323,7 +369,7 @@ fn pick_spend_elec() -> &'static str {
 
     let mut rng = rand::thread_rng();
     let index = rng.gen_range(0..possible.len());
-    return possible[index]
+    return possible[index];
 }
 
 fn pick_dinner() -> &'static str {
@@ -411,13 +457,12 @@ fn pick_dinner() -> &'static str {
         "Que votre repas du soir vous offre un sommeil réparateur.",
         "Nourrissez votre corps et détendez-vous pour la nuit.",
         "Prenez une pause bien méritée pour savourer votre repas ce soir.",
-        "Un repas qui vous préparera à une nuit de repos revitalisant."
+        "Un repas qui vous préparera à une nuit de repos revitalisant.",
     ];
 
     let mut rng = rand::thread_rng();
     let index = rng.gen_range(0..possible.len());
-    return possible[index]
-
+    return possible[index];
 }
 
 fn pick_lunch() -> &'static str {
@@ -483,14 +528,13 @@ fn pick_lunch() -> &'static str {
         "N'oubliez pas de prendre plaisir à manger équilibré.",
         "Laissez-vous emporter par les saveurs de votre repas.",
         "Profitez de cette pause déjeuner pour vous détendre.",
-        "Faites en sorte que votre déjeuner soit une expérience délicieuse."
+        "Faites en sorte que votre déjeuner soit une expérience délicieuse.",
     ];
 
     let mut rng = rand::thread_rng();
     let index = rng.gen_range(0..possible.len());
-    return possible[index]
+    return possible[index];
 }
-
 
 fn pick_inject() -> &'static str {
     let possible = [
@@ -550,11 +594,10 @@ fn pick_inject() -> &'static str {
 
     let mut rng = rand::thread_rng();
     let index = rng.gen_range(0..possible.len());
-    return possible[index]
+    return possible[index];
 }
 
-fn pick_break() -> &'static str
-{
+fn pick_break() -> &'static str {
     let possible = [
         "C'est l'heure de faire une pause gourmande ! Profitez de votre goûter pour recharger vos batteries.",
         "Prenez une pause bien méritée et savourez votre goûter. Un petit plaisir pour vous redonner de l'énergie.",
@@ -593,11 +636,10 @@ fn pick_break() -> &'static str
 
     let mut rng = rand::thread_rng();
     let index = rng.gen_range(0..possible.len());
-    return possible[index]
+    return possible[index];
 }
 
-fn pick_goodnight() -> &'static str
-{
+fn pick_goodnight() -> &'static str {
     let possible = [
         "Bonne soirée ! Que votre nuit soit douce et reposante, remplie de rêves merveilleux.",
         "Il est temps de se détendre et de profiter d'une belle soirée. Passez une nuit paisible et réparatrice.",
@@ -637,15 +679,12 @@ fn pick_goodnight() -> &'static str
         "Que votre soirée soit baignée de sérénité et que votre nuit soit un refuge de tranquillité. Bonne nuit !"
     ];
 
-
     let mut rng = rand::thread_rng();
     let index = rng.gen_range(0..possible.len());
-    return possible[index]
+    return possible[index];
 }
 
-
-fn pick_motiv_morning() -> &'static str
-{
+fn pick_motiv_morning() -> &'static str {
     let possible = [
         "C'est le moment de faire une pause et de vous accorder un moment de réflexion. Prenez une profonde respiration et recentrez-vous.",
         "Prenez quelques instants pour vous détendre et réfléchir à vos objectifs matinaux. Restez concentré(e) et déterminé(e) pour le reste de la matinée.",
@@ -673,13 +712,10 @@ fn pick_motiv_morning() -> &'static str
 
     let mut rng = rand::thread_rng();
     let index = rng.gen_range(0..possible.len());
-    return possible[index]
-
+    return possible[index];
 }
 
-
-fn pick_motiv_afternoon() -> &'static str
-{
+fn pick_motiv_afternoon() -> &'static str {
     let possible = [
         "Faites une pause dans vos activités de l'après-midi et prenez un moment pour vous recentrer. Respirez profondément et laissez vos pensées s'apaiser.",
         "C'est le moment idéal pour une pause de réflexion en milieu d'après-midi. Prenez un moment pour recharger vos énergies et reprendre le reste de la journée avec vigueur.",
@@ -712,11 +748,10 @@ fn pick_motiv_afternoon() -> &'static str
 
     let mut rng = rand::thread_rng();
     let index = rng.gen_range(0..possible.len());
-    return possible[index]
+    return possible[index];
 }
 
-fn now_weather() -> &'static str
-{
+fn now_weather() -> &'static str {
     let possible = [
         "Météo actuelle :",
         "Conditions météorologiques en ce moment :",
@@ -732,16 +767,45 @@ fn now_weather() -> &'static str
         "Actualité météo :",
         "L'état du temps en ce moment :",
         "Point sur la météo actuelle :",
-        "Instantané climatique :"
+        "Instantané climatique :",
+        "État de l'atmosphère :",
+        "Métrologie en direct :",
+        "Vue d'ensemble météo :",
+        "Météorologie locale :",
+        "Observations atmosphériques :",
+        "Conditions climatiques :",
+        "Situation actuelle des nuages :",
+        "Informations sur les précipitations :",
+        "Température, humidité et vents :",
+        "Prévision courte terme :",
+        "Météo de la région :",
+        "Les conditions présentes en temps réel :",
+        "Rapport météorologique :",
+        "Vue synoptique du temps :",
+        "État du climat à ce moment-là :",
+        "Météo du moment :",
+        "Conditions climatiques actuelles :",
+        "Températures, précipitations et vents :",
+        "Les conditions météorologiques en ce moment :",
+        "Présentation des conditions météorologiques :",
+        "Météo de l'endroit présent :",
+        "Conditions actuelles climatiques :",
+        "Informations sur les températures et les vents :",
+        "Vue d'ensemble météorologique :",
+        "Météo en temps réel :",
+        "Conditions actuelles de l'air :",
+        "Température, humidité et pression :",
+        "État du climat présent :",
+        "Prévisions météorologiques courtes durées :",
+        "Observations atmosphériques en direct :",
     ];
 
     let mut rng = rand::thread_rng();
     let index = rng.gen_range(0..possible.len());
-    return possible[index]
+    return possible[index];
 }
 
-fn strong_wind() -> &'static str
-{
+fn strong_wind() -> &'static str {
     let possible = [
         "Attention, vents forts en cours !",
         "Préparez-vous à des rafales de vent importantes !",
@@ -752,16 +816,15 @@ fn strong_wind() -> &'static str
         "Les vents soufflent fort, restez à l'abri.",
         "Vents vigoureux en vue, prenez vos précautions !",
         "Vent violent signalé, soyez prudent(e) !",
-        "Vent puissant enregistré, restez en sécurité !"
+        "Vent puissant enregistré, restez en sécurité !",
     ];
 
     let mut rng = rand::thread_rng();
     let index = rng.gen_range(0..possible.len());
-    return possible[index]
+    return possible[index];
 }
 
-fn cold_temp() -> &'static str
-{
+fn cold_temp() -> &'static str {
     let possible = [
         "Risque de gel, veillez à prendre des précautions.",
         "Températures basses à prévoir, restez au chaud.",
@@ -787,16 +850,15 @@ fn cold_temp() -> &'static str
         "Les températures chutent : restez confortablement au chaud.",
         "Risque de gel : pensez à protéger vos tuyaux du froid.",
         "Gel attendu, pensez à couvrir vos plantes et à vous préparer.",
-        "Froid intense en approche, soyez prêt(e) à affronter les frimas."
+        "Froid intense en approche, soyez prêt(e) à affronter les frimas.",
     ];
 
     let mut rng = rand::thread_rng();
     let index = rng.gen_range(0..possible.len());
-    return possible[index]
+    return possible[index];
 }
 
-fn high_temp() -> &'static str
-{
+fn high_temp() -> &'static str {
     let possible = [
         "Attention, températures élevées en cours !",
         "Préparez-vous à la chaleur intense !",
@@ -822,51 +884,159 @@ fn high_temp() -> &'static str
         "Restez à l'ombre : chaleur extrême annoncée.",
         "Précaution canicule : adoptez des mesures de refroidissement.",
         "Chaleur intense attendue, prenez des précautions contre la déshydratation.",
-        "Alerte canicule : protégez-vous et restez à l'abri de la chaleur."
+        "Alerte canicule : protégez-vous et restez à l'abri de la chaleur.",
     ];
 
     let mut rng = rand::thread_rng();
     let index = rng.gen_range(0..possible.len());
-    return possible[index]
+    return possible[index];
 }
 
-fn pick_notif_day() -> &'static str
-{
-    let possible : [&str; 16] = [
-        "C'est aujourd'hui, le",
-        "En ce jour, le",
-        "Nous sommes le",
-        "Le jour est venu :",
-        "À cette date, le",
-        "Voilà que nous sommes le",
-        "Le moment est venu :",
-        "En ce jour béni,",
-        "La date du jour est",
-        "Voici que nous sommes arrivés au",
-        "En cette belle journée du",
-        "Le soleil brille en ce",
-        "Dans le calendrier, c'est",
-        "Le temps est venu de célébrer",
-        "En ce jour mémorable,",
-        "Le début d'une nouvelle période :"
+fn pick_notif_day() -> &'static str {
+    let possible = [
+        "Nous sommes aujourd'hui dans",
+        "La date merveilleuse de",
+        "Voici le jour où",
+        "Le moment historique de",
+        "Dans ce jour précieux,",
+        "Nous sommes au rendez-vous de",
+        "C'est le jour de",
+        "Le jour qui marque l'anniversaire de",
+        "En ce jour tranquille,",
+        "Le temps de célébrer est arrivé",
+        "Le beau jour de",
+        "Nous sommes aujourd'hui les heureux",
+        "Le jour de",
+        "Voici le jour que nous avions tous attendu",
+        "C'est un jour magnifique",
+        "Nous sommes aujourd'hui pour fêter",
+        "Le beau jour de",
+        "Voici le jour que nous avions tous espérés",
+        "Le jour est venu pour nous rêver",
+        "Nous sommes aujourd'hui pour redémarrer",
+        "Le jour est venu de triompher",
+        "Dans ce jour, nous avons la chance d'être",
+        "Nous sommes aujourd'hui pour réaliser nos rêves",
+        "Le jour est venu de réunir notre famille",
+        "Dans ce jour merveilleux, nous vivons pleinement",
+        "Nous sommes aujourd'hui pour créer des souvenirs",
+        "Le jour est venu de faire le meilleur de nous-mêmes",
+        "Voici le jour qui a changé tout",
+        "Nous sommes aujourd'hui pour célébrer la vie",
+        "Le jour est venu de nous apprendre une leçon",
+        "Dans ce jour, nous avons l'opportunité de réaliser nos objectifs",
+        "Nous sommes aujourd'hui pour exprimer notre amour",
+        "Le jour est venu de nous rappeler la beauté du monde",
+        "Dans ce jour, nous vivons chaque instant",
+        "Nous sommes aujourd'hui pour changer notre vie",
+        "Le jour est venu de nous donner espérance",
+        "Dans ce jour merveilleux, rien ne nous semble impossible",
+        "Nous sommes aujourd'hui pour réaliser nos rêves les plus fous",
+        "Le jour est venu de nous apprendre à être heureux",
+        "Dans ce jour, nous sommes tous unis",
+        "Nous sommes aujourd'hui pour redécouvrir notre passion",
+        "Le jour est venu de nous donner une nouvelle chance",
+        "Dans ce jour, tout est possible",
+        "Nous sommes aujourd'hui pour réaliser nos ambitions",
+        "Le jour est venu de nous donner un nouveau départ",
+        "Dans ce jour, nous vivons pleinement chaque instant",
+        "Nous sommes aujourd'hui pour célébrer la vie et l'amour",
+        "Le jour est venu de nous apprendre à être heureux ensemble",
+        "Dans ce jour, rien ne peut nous arrêter",
+        "Nous sommes aujourd'hui pour réaliser nos objectifs les plus élevés",
+        "Le jour est venu de nous rappeler que la vie est une aventure",
+        "Dans ce jour, nous sommes tous des héros",
+        "Nous sommes aujourd'hui pour faire le monde un meilleur lieu",
+        "Le jour est venu de nous rappeler que la vie est courte",
+        "Dans ce jour, nous vivons chaque instant avec passion",
+        "Nous sommes aujourd'hui pour célébrer nos succès et nos défaites",
+        "Le jour est venu de nous rappeler que la famille est tout important",
+        "Dans ce jour, nous sommes tous des créateurs",
+        "Le jour est venu de nous rappeler que chaque jour est unique",
+        "Dans ce jour, nous vivons chaque instant avec amour",
+        "Nous sommes aujourd'hui pour célébrer notre humanité",
+        "Le jour est venu de nous rappeler que nous sommes tous des êtres fragiles",
+        "Dans ce jour, nous vivons chaque instant avec gratitude",
+        "Nous sommes aujourd'hui pour réaliser notre plein potentiel",
+        "Le jour est venu de nous rappeler que la vie est un don",
+        "Dans ce jour, nous vivons chaque instant avec passion et amour",
+        "Nous sommes aujourd'hui pour célébrer notre existence",
+        "Le jour est venu de nous rappeler que la vie est une aventure merveilleuse",
+        "Dans ce jour, nous sommes tous des explorateurs",
+        "Nous sommes aujourd'hui pour réaliser notre rêve le plus cher",
+        "Le jour est venu de nous rappeler que la vie est courte et précieuse",
+        "Dans ce jour, nous vivons chaque instant avec passion, amour et gratitude",
+        "Nous sommes aujourd'hui pour réaliser nos objectifs les plus audacieux",
+        "Le jour est venu de nous rappeler que chaque action compte",
+        "Dans ce jour, nous sommes tous des créateurs exceptionnels",
+        "Nous sommes aujourd'hui pour réaliser notre vision du monde",
+        "Le jour est venu de nous rappeler que la vie est une aventure incroyablement belle",
+        "Dans ce jour, nous vivons chaque instant avec passion, amour et espoir",
+        "Nous sommes aujourd'hui pour réaliser nos cauchemars les plus terribles",
+        "Le jour est venu de nous rappeler que chaque nouvelle journée est une opportunité",
+        "Dans ce jour, nous sommes tous des innovateurs",
+        "Nous sommes aujourd'hui pour réaliser notre vision de la société idéale",
+        "Le jour est venu de nous rappeler que chaque instant peut être une aventure",
+        "Dans ce jour, nous vivons chaque instant avec passion, amour et résonance",
+        "Nous sommes aujourd'hui pour réaliser nos ambitions les plus élevées",
+        "Le jour est venu de nous rappeler que chaque nouvelle expérience est une occasion de grandir",
+        "Dans ce jour, nous sommes tous des explorateurs passionnés",
+        "Nous sommes aujourd'hui pour réaliser notre rêve de paix et d'harmonie dans le monde",
+        "Le jour est venu de nous rappeler que chaque instant peut être un moment clé",
+        "Dans ce jour, nous vivons chaque instant avec passion, amour et intensité",
+        "Nous sommes aujourd'hui pour réaliser nos objectifs les plus audacieux et les plus incroyables",
+        "Le jour est venu de nous rappeler que chaque action peut avoir des répercussions immenses",
+        "Dans ce jour, nous sommes tous des visionnaires",
+        "Nous sommes aujourd'hui pour réaliser notre rêve de changement et de transformation",
+        "Le jour est venu de nous rappeler que chaque nouvelle journée est une opportunité inestimable",
+        "Dans ce jour, nous vivons chaque instant avec passion, amour et dévotion",
+        "Nous sommes aujourd'hui pour réaliser nos ambitions les plus chères et les plus ambitieuses",
+        "Le jour est venu de nous rappeler que chaque nouvelle expérience peut nous apprendre quelque chose nouveau",
+        "Dans ce jour, nous sommes tous des inventeurs",
+        "Nous sommes aujourd'hui pour réaliser notre rêve de paix et d'unité dans le monde",
+        "Le jour est venu de nous rappeler que chaque instant peut être une aventure magique",
+        "Dans ce jour, nous vivons chaque instant avec passion, amour et curiosité",
+        "Nous sommes aujourd'hui pour réaliser nos objectifs les plus ambiteux et les plus incroyables",
+        "Le jour est venu de nous rappeler que chaque nouvelle rencontre peut changer notre vie",
+        "Dans ce jour, nous sommes tous des explorateurs intrépides",
+        "Nous sommes aujourd'hui pour réaliser notre rêve de changement et d'évolution",
+        "Le jour est venu de nous rappeler que chaque nouvelle expérience peut nous apprendre quelque chose invaluable",
+        "Dans ce jour, nous vivons chaque instant avec passion, amour et inspiration",
+        "Nous sommes aujourd'hui pour réaliser nos ambitions les plus audacieuses et les plus incroyables",
+        "Le jour est venu de nous rappeler que chaque nouvelle aventure peut nous apprendre quelque chose nouveau",
+        "Dans ce jour, nous sommes tous des créateurs visionnaires",
+        "Nous sommes aujourd'hui pour réaliser notre rêve de paix et d'harmonie universelle",
+        "Le jour est venu de nous rappeler que chaque nouvelle expérience peut nous faire grandir",
+        "Dans ce jour, nous vivons chaque instant avec passion, amour et résonance profonde",
+        "Nous sommes aujourd'hui pour réaliser nos objectifs les plus ambiteux et les plus inattendus",
+        "Le jour est venu de nous rappeler que chaque nouvelle rencontre peut être une aventure magique",
+        "Dans ce jour, nous sommes tous des inventeurs visionnaires",
+        "Nous sommes aujourd'hui pour réaliser notre rêve de changement et de transformation profonde",
+        "Le jour est venu de nous rappeler que chaque nouvelle expérience peut nous apprendre quelque chose inestimable",
+        "Dans ce jour, nous vivons chaque instant avec passion, amour et enthousiasme",
+        "Nous sommes aujourd'hui pour réaliser nos ambitions les plus chères et les plus ambitieuses",
+        "Le jour est venu de nous rappeler que chaque nouvelle aventure peut être une aventure de découverte",
+        "Dans ce jour, nous sommes tous des explorateurs passionnés",
+        "Nous sommes aujourd'hui pour réaliser notre rêve de paix et d'unité dans le monde entier",
+        "Le jour est venu de nous rappeler que chaque nouvelle rencontre peut nous apprendre quelque chose nouveau et important",
+        "Dans ce jour, nous vivons chaque instant avec passion, amour et curiosité insatiable",
+        "Nous sommes aujourd'hui pour réaliser nos objectifs les plus ambitieux et les plus incroyables",
+        "Le jour est venu de nous rappeler que chaque nouvelle expérience peut nous apprendre quelque chose invaluable et profondément enrichissant",
+        "Dans ce jour, nous vivons chaque instant avec passion, amour et enthousiasme intense",
+        "Nous sommes aujourd'hui pour réaliser notre rêve de changement et d'évolution profonde et durable",
     ];
 
     let mut rng = rand::thread_rng();
     let index = rng.gen_range(0..possible.len());
-    return possible[index]
+    possible[index]
 }
 
-
-
-
-
-async fn safe_query(value : & str, server : &str) -> String
-{
+async fn safe_query(value: &str, server: &str) -> String {
     match query_value(value, server).await {
         Ok(e) => e,
-        Err(e)=> {
-         println!("{}",e);
-         "".to_string()
+        Err(e) => {
+            println!("{}", e);
+            "".to_string()
         }
     }
 }
@@ -876,82 +1046,248 @@ struct WeatherCode {
     description: &'static str,
 }
 
-fn get_weather_code(code : u32) -> &'static str {
+fn get_weather_code(code: u32) -> &'static str {
     let weather_codes = [
-        WeatherCode { code: 113, description: "Le temps est dégagé et ensoleillé" },
-        WeatherCode { code: 116, description: "Le temps est partiellement nuageux" },
-        WeatherCode { code: 119, description: "Le ciel est nuageux" },
-        WeatherCode { code: 122, description: "Le ciel est couvert" },
-        WeatherCode { code: 143, description: "Il y a de la brume" },
-        WeatherCode { code: 176, description: "Des pluies éparses sont à proximité" },
-        WeatherCode { code: 179, description: "Il y a des chutes de neige éparses à proximité" },
-        WeatherCode { code: 182, description: "Il y a du verglas épars à proximité" },
-        WeatherCode { code: 185, description: "Il y a de la bruine verglaçante épars à proximité" },
-        WeatherCode { code: 200, description: "Des orages sont épars à proximité" },
-        WeatherCode { code: 227, description: "Des chasse-neige sont en action" },
-        WeatherCode { code: 230, description: "Un blizzard est en cours" },
-        WeatherCode { code: 248, description: "Il y a du brouillard" },
-        WeatherCode { code: 260, description: "Il y a du brouillard givrant" },
-        WeatherCode { code: 263, description: "Il y a des averses de bruine légère" },
-        WeatherCode { code: 266, description: "Il y a de la bruine légère" },
-        WeatherCode { code: 281, description: "Il y a de la bruine verglaçante légère" },
-        WeatherCode { code: 284, description: "Il y a de la bruine verglaçante forte" },
-        WeatherCode { code: 293, description: "Il y a des averses de pluie légère" },
-        WeatherCode { code: 296, description: "Il y a de la pluie légère" },
-        WeatherCode { code: 299, description: "Par moments, il y a une pluie modérée" },
-        WeatherCode { code: 302, description: "Il y a de la pluie modérée" },
-        WeatherCode { code: 305, description: "Par moments, il y a une pluie forte" },
-        WeatherCode { code: 308, description: "Il y a de fortes pluies" },
-        WeatherCode { code: 311, description: "Il y a de la pluie verglaçante légère" },
-        WeatherCode { code: 314, description: "Il y a de la pluie verglaçante modérée ou forte" },
-        WeatherCode { code: 317, description: "Il y a de la neige légère" },
-        WeatherCode { code: 320, description: "Il y a de la neige modérée ou forte" },
-        WeatherCode { code: 323, description: "Il y a des averses de neige légère éparses" },
-        WeatherCode { code: 326, description: "Il y a de la neige légère" },
-        WeatherCode { code: 329, description: "Il y a des averses de neige modérée éparses" },
-        WeatherCode { code: 332, description: "Il y a de la neige modérée" },
-        WeatherCode { code: 335, description: "Il y a des averses de neige forte éparses" },
-        WeatherCode { code: 338, description: "Il y a de fortes chutes de neige" },
-        WeatherCode { code: 350, description: "Il y a des grêlons" },
-        WeatherCode { code: 353, description: "Il y a des averses de pluie légère" },
-        WeatherCode { code: 356, description: "Il y a des averses de pluie modérée ou forte" },
-        WeatherCode { code: 359, description: "Il y a des averses de pluie torrentielles" },
-        WeatherCode { code: 362, description: "Il y a des averses de grésil légères" },
-        WeatherCode { code: 365, description: "Il y a des averses de grésil modéré ou fort" },
-        WeatherCode { code: 368, description: "Il y a des averses de neige légères" },
-        WeatherCode { code: 371, description: "Il y a des averses de neige modérées ou fortes" },
-        WeatherCode { code: 374, description: "Il y a des averses légères de grêlons" },
-        WeatherCode { code: 377, description: "Il y a des averses modérées ou fortes de grêlons" },
-        WeatherCode { code: 386, description: "Il y a de la pluie légère dans la région avec des éclairs" },
-        WeatherCode { code: 389, description: "Il y a de la pluie modérée ou forte dans la région avec des éclairs" },
-        WeatherCode { code: 392, description: "Il y a de la neige légère dans la région avec des éclairs" },
-        WeatherCode { code: 395, description: "Il y a de la neige modérée ou forte dans la région avec des éclairs" },
+        WeatherCode {
+            code: 113,
+            description: "Le temps est dégagé et ensoleillé",
+        },
+        WeatherCode {
+            code: 116,
+            description: "Le temps est partiellement nuageux",
+        },
+        WeatherCode {
+            code: 119,
+            description: "Le ciel est nuageux",
+        },
+        WeatherCode {
+            code: 122,
+            description: "Le ciel est couvert",
+        },
+        WeatherCode {
+            code: 143,
+            description: "Il y a de la brume",
+        },
+        WeatherCode {
+            code: 176,
+            description: "Des pluies éparses sont à proximité",
+        },
+        WeatherCode {
+            code: 179,
+            description: "Il y a des chutes de neige éparses à proximité",
+        },
+        WeatherCode {
+            code: 182,
+            description: "Il y a du verglas épars à proximité",
+        },
+        WeatherCode {
+            code: 185,
+            description: "Il y a de la bruine verglaçante épars à proximité",
+        },
+        WeatherCode {
+            code: 200,
+            description: "Des orages sont épars à proximité",
+        },
+        WeatherCode {
+            code: 227,
+            description: "Des chasse-neige sont en action",
+        },
+        WeatherCode {
+            code: 230,
+            description: "Un blizzard est en cours",
+        },
+        WeatherCode {
+            code: 248,
+            description: "Il y a du brouillard",
+        },
+        WeatherCode {
+            code: 260,
+            description: "Il y a du brouillard givrant",
+        },
+        WeatherCode {
+            code: 263,
+            description: "Il y a des averses de bruine légère",
+        },
+        WeatherCode {
+            code: 266,
+            description: "Il y a de la bruine légère",
+        },
+        WeatherCode {
+            code: 281,
+            description: "Il y a de la bruine verglaçante légère",
+        },
+        WeatherCode {
+            code: 284,
+            description: "Il y a de la bruine verglaçante forte",
+        },
+        WeatherCode {
+            code: 293,
+            description: "Il y a des averses de pluie légère",
+        },
+        WeatherCode {
+            code: 296,
+            description: "Il y a de la pluie légère",
+        },
+        WeatherCode {
+            code: 299,
+            description: "Par moments, il y a une pluie modérée",
+        },
+        WeatherCode {
+            code: 302,
+            description: "Il y a de la pluie modérée",
+        },
+        WeatherCode {
+            code: 305,
+            description: "Par moments, il y a une pluie forte",
+        },
+        WeatherCode {
+            code: 308,
+            description: "Il y a de fortes pluies",
+        },
+        WeatherCode {
+            code: 311,
+            description: "Il y a de la pluie verglaçante légère",
+        },
+        WeatherCode {
+            code: 314,
+            description: "Il y a de la pluie verglaçante modérée ou forte",
+        },
+        WeatherCode {
+            code: 317,
+            description: "Il y a de la neige légère",
+        },
+        WeatherCode {
+            code: 320,
+            description: "Il y a de la neige modérée ou forte",
+        },
+        WeatherCode {
+            code: 323,
+            description: "Il y a des averses de neige légère éparses",
+        },
+        WeatherCode {
+            code: 326,
+            description: "Il y a de la neige légère",
+        },
+        WeatherCode {
+            code: 329,
+            description: "Il y a des averses de neige modérée éparses",
+        },
+        WeatherCode {
+            code: 332,
+            description: "Il y a de la neige modérée",
+        },
+        WeatherCode {
+            code: 335,
+            description: "Il y a des averses de neige forte éparses",
+        },
+        WeatherCode {
+            code: 338,
+            description: "Il y a de fortes chutes de neige",
+        },
+        WeatherCode {
+            code: 350,
+            description: "Il y a des grêlons",
+        },
+        WeatherCode {
+            code: 353,
+            description: "Il y a des averses de pluie légère",
+        },
+        WeatherCode {
+            code: 356,
+            description: "Il y a des averses de pluie modérée ou forte",
+        },
+        WeatherCode {
+            code: 359,
+            description: "Il y a des averses de pluie torrentielles",
+        },
+        WeatherCode {
+            code: 362,
+            description: "Il y a des averses de grésil légères",
+        },
+        WeatherCode {
+            code: 365,
+            description: "Il y a des averses de grésil modéré ou fort",
+        },
+        WeatherCode {
+            code: 368,
+            description: "Il y a des averses de neige légères",
+        },
+        WeatherCode {
+            code: 371,
+            description: "Il y a des averses de neige modérées ou fortes",
+        },
+        WeatherCode {
+            code: 374,
+            description: "Il y a des averses légères de grêlons",
+        },
+        WeatherCode {
+            code: 377,
+            description: "Il y a des averses modérées ou fortes de grêlons",
+        },
+        WeatherCode {
+            code: 386,
+            description: "Il y a de la pluie légère dans la région avec des éclairs",
+        },
+        WeatherCode {
+            code: 389,
+            description: "Il y a de la pluie modérée ou forte dans la région avec des éclairs",
+        },
+        WeatherCode {
+            code: 392,
+            description: "Il y a de la neige légère dans la région avec des éclairs",
+        },
+        WeatherCode {
+            code: 395,
+            description: "Il y a de la neige modérée ou forte dans la région avec des éclairs",
+        },
     ];
 
     for weather_code in weather_codes.iter() {
-        if code == weather_code.code
-        {
+        if code == weather_code.code {
             return weather_code.description;
         }
     }
     "Code météo inconnu"
 }
 
+async fn weather_message(prometheus_url: &str) -> String {
+    let temperature_celsius: String = safe_query(
+        "last_over_time(temperature_celsius{forecast=\"current\"}[2h])",
+        prometheus_url,
+    )
+    .await;
+    let temperature_celsius_max: String = safe_query(
+        "last_over_time(temperature_celsius_maximum{forecast=\"0d\"}[2h])",
+        prometheus_url,
+    )
+    .await;
+    let temperature_celsius_min: String = safe_query(
+        "last_over_time(temperature_celsius_minimum{forecast=\"0d\"}[2h])",
+        prometheus_url,
+    )
+    .await;
+    let wind_speed_kmph: String = safe_query(
+        "last_over_time(windspeed_kmph{forecast=\"current\"}[1h])",
+        prometheus_url,
+    )
+    .await;
+    let humidity_percentage: String = safe_query(
+        "last_over_time(humidity_percentage{forecast=\"current\"}[2h])",
+        prometheus_url,
+    )
+    .await;
+    let cloudover_percentage: String = safe_query(
+        "last_over_time(cloudcover_percentage{forecast=\"current\"}[2h])",
+        prometheus_url,
+    )
+    .await;
+    let weather_code: String = safe_query(
+        "last_over_time(weather_code{forecast=\"current\"}[2h])",
+        prometheus_url,
+    )
+    .await;
 
-
-async fn weather_message(prometheus_url : &str) -> String
-{
-    let temperature_celsius: String = safe_query("last_over_time(temperature_celsius{forecast=\"current\"}[2h])", prometheus_url).await;
-    let temperature_celsius_max: String = safe_query("last_over_time(temperature_celsius_maximum{forecast=\"0d\"}[2h])", prometheus_url).await;
-    let temperature_celsius_min: String = safe_query("last_over_time(temperature_celsius_minimum{forecast=\"0d\"}[2h])", prometheus_url).await;
-    let wind_speed_kmph: String = safe_query("last_over_time(windspeed_kmph{forecast=\"current\"}[1h])", prometheus_url).await;
-    let humidity_percentage: String = safe_query("last_over_time(humidity_percentage{forecast=\"current\"}[2h])", prometheus_url).await;
-    let cloudover_percentage: String = safe_query("last_over_time(cloudcover_percentage{forecast=\"current\"}[2h])", prometheus_url).await;
-    let weather_code: String = safe_query("last_over_time(weather_code{forecast=\"current\"}[2h])", prometheus_url).await;
-
-
-    if temperature_celsius == ""
-    {
+    if temperature_celsius == "" {
         // No data
         return "".to_string();
     }
@@ -968,18 +1304,22 @@ async fn weather_message(prometheus_url : &str) -> String
     let weather_code_value: u32 = weather_code.parse().unwrap_or(0);
     let cloudover_percentage_value: u32 = cloudover_percentage.parse().unwrap_or(0);
 
-
     // Générer le message en fonction des valeurs obtenues
     message.push_str(now_weather());
     message.push_str(&format!(" {}.", get_weather_code(weather_code_value)));
 
-    if cloudover_percentage_value > 0
-    {
+    if cloudover_percentage_value > 0 {
         message.push_str(&format!(" Couverture nuageuse {}%.", cloudover_percentage));
     }
 
-    message.push_str(&format!(" Température actuelle : {} degrés, Minimale {}, Maximale {}. ", temperature_value, temperature_value_min, temperature_value_max));
-    message.push_str(&format!("Vitesse du vent : {} km par heure, ", wind_speed_value));
+    message.push_str(&format!(
+        " Température actuelle : {} degrés, Minimale {}, Maximale {}. ",
+        temperature_value, temperature_value_min, temperature_value_max
+    ));
+    message.push_str(&format!(
+        "Vitesse du vent : {} km par heure, ",
+        wind_speed_value
+    ));
     message.push_str(&format!("Humidité : {}%. ", humidity_value));
 
     if wind_speed_value > 40.0 {
@@ -994,8 +1334,7 @@ async fn weather_message(prometheus_url : &str) -> String
     message
 }
 
-async fn electricity_message(prometheus_url : &str ) -> String
-{
+async fn electricity_message(prometheus_url: &str) -> String {
     let mut message = String::new();
 
     let soc = safe_query("imeon_battery_soc", prometheus_url).await;
@@ -1004,33 +1343,32 @@ async fn electricity_message(prometheus_url : &str ) -> String
 
     message += format!(" {} : ", pick_report_power()).as_str();
 
-    if soc == "100.0"
-    {
+    if soc == "100.0" {
         message += format!("{}. {}. ", pick_full(), pick_spend_elec()).as_str();
     }
 
     message.push_str(&format!("Batterie {soc} % "));
-    message.push_str(&format!("Production moyenne sur la dernière heure {avgsolar_1h} watt heure. "));
-    message.push_str(&format!("Consommation moyenne sur la dernière heure {avgpower_1h} watt heure. "));
+    message.push_str(&format!(
+        "Production moyenne sur la dernière heure {avgsolar_1h} watt heure. "
+    ));
+    message.push_str(&format!(
+        "Consommation moyenne sur la dernière heure {avgpower_1h} watt heure. "
+    ));
 
     match avgpower_1h.parse::<f32>() {
         Ok(v) => {
-            if v < 0.0
-            {
+            if v < 0.0 {
                 message += pick_inject();
             }
-        },
+        }
         Err(_) => {}
     }
 
     message
 }
 
-
-fn to_fr_day(day : Weekday) -> &'static str
-{
-    match day
-    {
+fn to_fr_day(day: Weekday) -> &'static str {
+    match day {
         Weekday::Mon => "Lundi",
         Weekday::Tue => "Mardi",
         Weekday::Wed => "Mercredi",
@@ -1041,8 +1379,7 @@ fn to_fr_day(day : Weekday) -> &'static str
     }
 }
 
-fn to_fr_month(m : u32) -> &'static str
-{
+fn to_fr_month(m: u32) -> &'static str {
     match m as i32 {
         1 => "Janvier",
         2 => "Février",
@@ -1056,19 +1393,17 @@ fn to_fr_month(m : u32) -> &'static str
         10 => "Octobre",
         11 => "Novembre",
         12 => "Décembre",
-        _ => "Erreur"
+        _ => "Erreur",
     }
 }
 
-
 #[tokio::main]
-async fn main()  -> Result<(), Box<dyn error::Error>>
-{
+async fn main() -> Result<(), Box<dyn error::Error>> {
     let args = Args::parse();
 
     let time: DateTime<Local> = Local::now();
 
-    let mut message : String = "".to_string();
+    let mut message: String = "".to_string();
 
     let dayow = to_fr_day(time.weekday());
     let day = time.day();
@@ -1076,43 +1411,31 @@ async fn main()  -> Result<(), Box<dyn error::Error>>
 
     message.push_str(&format!("{} !", pick_greetings()));
 
-
     message.push_str(&format!(" {} {dayow} {day} {month}. ", pick_notif_day()));
 
-    if time.minute() == 0
-    {
+    if time.minute() == 0 {
         message.push_str(&format!(" Il est {} heure. ", time.hour()));
-    }
-    else
-    {
-        message.push_str(&format!(" Il est {} heure et {} minutes. ", time.hour(), time.minute()));
+    } else {
+        message.push_str(&format!(
+            " Il est {} heure et {} minutes. ",
+            time.hour(),
+            time.minute()
+        ));
     }
 
-
-    if time.hour() == 8
-    {
+    if time.hour() == 8 {
         message += pick_morning_greet();
-    } else if time.hour() == 10
-    {
+    } else if time.hour() == 10 {
         message += pick_motiv_morning();
-    }
-    else if time.hour()  == 12
-    {
+    } else if time.hour() == 12 {
         message += pick_lunch();
-    }
-    else if time.hour() == 15 {
+    } else if time.hour() == 15 {
         message += pick_motiv_afternoon();
-    }
-    else if time.hour() == 16
-    {
+    } else if time.hour() == 16 {
         message += pick_break();
-    }
-    else if time.hour()  == 19
-    {
+    } else if time.hour() == 19 {
         message += pick_dinner();
-    }
-    else if time.hour()  == 20
-    {
+    } else if time.hour() == 20 {
         message += pick_goodnight();
     }
 
